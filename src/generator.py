@@ -68,12 +68,8 @@ def __process_req_folder(args, processor, fout, processedfolder, parentpath, dep
 
 def generatereqs(args):
     processor = mp.ArchiFileProcessor(args.projectdir)
-
-    # generate map of archilinks to pages
-    # emap = generate_elements_map(args, processor)
-    # print(emap)
-
-    # generate requirements
-    # reqpath = hugo.getlocalpath(args) / 'content'
-    with open('requirements.txt', 'w', encoding='utf8') as fout:
+    reqpath = args.projectdir / 'temp' / 'requirements.txt'
+    if args.verbose:
+        print('requirements file:', reqpath)
+    with open(str(reqpath), 'w', encoding='utf8') as fout:
         __process_req_folder(args, processor, fout, 'Requirements', Path(args.projectname), 1)
