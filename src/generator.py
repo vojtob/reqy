@@ -9,12 +9,14 @@ def __get_header(title, level):
 def __writerealization(args, fout, realization):
     # Realization by product type is used for general remarks, only realization relationship is displayed, no reference to element
     if realization.type == 'Product':
-        fout.write('Vyjadrenie k realizácii požiadavky: {0}\n'.format(realization.realization_relationship.desc))
+        # fout.write('Vyjadrenie k realizácii požiadavky: {0}\n'.format(realization.realization_relationship.desc))
+        fout.write('{0}\n'.format(realization.realization_relationship.desc))
         return
 
     # Capability means only simple description is displayed, no reference to element
     if realization.type == 'Capability':
-        fout.write('Vyjadrenie k realizácii požiadavky: {capability_name}: {realization_description}\n'.format(
+        # fout.write('Vyjadrenie k realizácii požiadavky: {capability_name}: {realization_description}\n'.format(
+        fout.write('{capability_name}: {realization_description}\n'.format(
             capability_name=realization.name, 
             realization_description=realization.desc))
         return
@@ -27,6 +29,8 @@ def __writerealization(args, fout, realization):
     if realization.realization_relationship.desc is not None:
         # add specific description
         fout.write('. ' + realization.realization_relationship.desc)
+    else:
+        fout.write('. ' + realization.desc)
     fout.write('\n')
 
 def __writereq(args, fout, req):
@@ -34,7 +38,7 @@ def __writereq(args, fout, req):
         print('    process requirement', req.name)
     
     # requirement header
-    fout.write(req.name)  
+    fout.write('#### ' + req.name)  
     fout.write('\n')  
 
     # requirement realizations
@@ -68,7 +72,7 @@ def __process_req_folder(args, processor, fout, processedfolder, parentpath, dep
 
 def generatereqs(args):
     processor = mp.ArchiFileProcessor(args.projectdir)
-    reqpath = args.projectdir / 'temp' / 'requirements.txt'
+    reqpath = args.projectdir / 'temp' / 'requirements.md'
     if args.verbose:
         print('requirements file:', reqpath)
     with open(str(reqpath), 'w', encoding='utf8') as fout:

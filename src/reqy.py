@@ -48,4 +48,4 @@ if __name__ == '__main__':
         for p in args.problems:
             print('  ', p)
     else:
-        print('\reqy: DONE ... OK')
+        print('reqy: DONE ... OK')
