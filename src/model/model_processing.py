@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+import zipfile as zipfile
 
 class ArchiFileProcessor:
     ns = {'xsi': "http://www.w3.org/2001/XMLSchema-instance",
@@ -8,6 +9,11 @@ class ArchiFileProcessor:
         # modelname = projectdir.split('\\')[-1]
         # modelname = str(projectdir.stem)+'.archimate'
         modelpath = projectdir / 'src_doc' / 'model' / (str(projectdir.stem)+'.archimate')
+        with zipfile.ZipFile(modelpath, 'r') as azip:
+            # azip.extractall(projectdir / 'src_doc' / 'model')
+            azip.extract('model.xml', projectdir / 'src_doc' / 'model')
+        # print(modelpath)
+        modelpath = projectdir / 'src_doc' / 'model' / 'model.xml'
         self.tree = ET.parse(modelpath)
     
     def get_element(self, eid):
@@ -108,6 +114,8 @@ class Element:
             'ApplicationProcess':'Aplikačný proces',
             'SystemSoftware':'Softvér',
             'Artifact':'Technologický Artefakt',
+            'TechnologyProcess':'Technologický Proces',
+            'TechnologyCollaboration':'Technologický komponent',
             'Capability':'Schopnosť, prístup'
         }
         
@@ -143,5 +151,11 @@ class Realization(Element):
             return '000000' + self.name
         if self.type == 'Capability':
             return '000001' + self.name
+        if self.type.startswith('Business'):
+            return '00010' + self.name
+        if self.type.startswith('Application'):
+            return '00020' + self.name
+        if self.type.startswith('Technology'):
+            return '00030' + self.name
         return '999999' + self.name
         

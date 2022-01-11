@@ -9,7 +9,7 @@ def log(args, message):
     print(message_format.format(args=args, message=message))
 
 def __add_project(args):
-    if args.projectdir is None:
+    if not 'projectdir' in args:
         args.projectdir = Path.cwd().parent
     else:
         args.projectdir = Path(args.projectdir)
@@ -30,10 +30,12 @@ if __name__ == '__main__':
     print('reqy: START\n')    
     
     parser = argparse.ArgumentParser(description='práca s požiadavkami')
-    parser.add_argument('-pd', '--projectdir', help='set project explicitly')
+    # parser.add_argument('-pd', '--projectdir', help='set project explicitly')
     parser.add_argument('-v', '--verbose', help='to be more verbose', action='store_true')
     parser.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
-    parser.add_argument('-f', '--file', help='process only this one file')
+    parser.add_argument('-o', '--outputtype', choices=['short','md','excel'], default='md')
+    # parser.add_argument('outputtype', choices=['short','md','excel'], default='md')
+    # parser.add_argument('-f', '--file', help='process only this one file')
 
     args = parser.parse_args()
     if args.debug:
@@ -41,6 +43,7 @@ if __name__ == '__main__':
     args = __add_project(args)
 
     # process requirements
+    print(args.outputtype)
     generator.generatereqs(args)
 
     if args.problems:
